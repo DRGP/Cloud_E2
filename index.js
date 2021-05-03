@@ -5,7 +5,7 @@ exports.handler = async (event) => {
     let nluKey = process.env.nluKey
     let requestJSON = JSON.parse(event.body);
     let returnValue;
-    
+
     const naturalLanguageUnderstanding = new NaturalLanguageUnderstandingV1({
         version: '2020-08-01',
         authenticator: new IamAuthenticator({
@@ -42,10 +42,4 @@ exports.handler = async (event) => {
         });
     
     return returnValue;
-    /*analysisResults = await naturalLanguageUnderstanding.analyze(analyzeParams);
-    return {
-        lenguaje_texto: analysisResults.result.language,
-        palabras_clave: analysisResults.result.keywords,
-        entidades: analysisResults.result.entities
-    };*/
 };
