@@ -4,7 +4,8 @@ const { IamAuthenticator } = require('ibm-watson/auth');
 exports.handler = async (event) => {
     let nluKey = process.env.nluKey
     let requestJSON = JSON.parse(event.body);
-
+    let returnValue;
+    
     const naturalLanguageUnderstanding = new NaturalLanguageUnderstandingV1({
         version: '2020-08-01',
         authenticator: new IamAuthenticator({
@@ -28,10 +29,23 @@ exports.handler = async (event) => {
         }
     };
     
-    analysisResults = await naturalLanguageUnderstanding.analyze(analyzeParams);
+    await naturalLanguageUnderstanding.analyze(analyzeParams)
+        .then(analysisResults => {
+            returnValue = {
+                lenguaje_texto: analysisResults.result.language,
+                palabras_clave: analysisResults.result.keywords,
+                entidades: analysisResults.result.entities
+            };
+        })
+        .catch(err => {
+            returnValue = err;
+        });
+    
+    return returnValue;
+    /*analysisResults = await naturalLanguageUnderstanding.analyze(analyzeParams);
     return {
         lenguaje_texto: analysisResults.result.language,
         palabras_clave: analysisResults.result.keywords,
         entidades: analysisResults.result.entities
-    };
+    };*/
 };
